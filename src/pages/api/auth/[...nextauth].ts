@@ -27,9 +27,14 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const {} = trpc.useQuery(["auth.login"]);
-        // console.log(credentials, req);
-        return {} as User;
+        if (!credentials) throw Error("No credentials");
+        const { username, password } = credentials;
+        const { mutateAsync } = trpc.useMutation(["auth.login"]);
+
+        const user = await mutateAsync({ username, password });
+        if (!user) throw Error("Invalid credentials");
+
+        return user as User;
       },
     }),
   ],
