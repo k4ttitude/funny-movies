@@ -15,7 +15,7 @@ const Home: NextPage = () => {
       </Head>
 
       <Header />
-      <main className="flex-1 items-center p-8 grid sm:grid-cols-1 lg:grid-cols-2 auto-rows-min gap-8 overflow-hidden">
+      <main className="flex-1 items-center p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-8 overflow-hidden">
         {movies?.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
