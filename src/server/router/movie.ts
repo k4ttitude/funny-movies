@@ -1,7 +1,7 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import { createProtectedRouter } from "./protected-router";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Vote, VoteType } from "@prisma/client";
 import { env } from "../../env/server.mjs";
 
 type YoutubeVideosResponse = {
@@ -41,31 +41,59 @@ const crawlMovieMeta = async (
   }
 };
 
-const protectedMovieRouter = createProtectedRouter().mutation("create", {
-  input: z.object({ url: z.string().url() }),
-  resolve: async ({
-    ctx: {
-      prisma,
-      session: { user },
+const protectedMovieRouter = createProtectedRouter()
+  .mutation("create", {
+    input: z.object({ url: z.string().url() }),
+    resolve: async ({
+      ctx: {
+        prisma,
+        session: { user },
+      },
+      input: { url },
+    }) => {
+      const urlRegex = /youtube\.com\/watch\?v=(?<slug>\S+)/;
+      const match = url.match(urlRegex);
+      if (!match || !match.groups || !match.groups.slug) {
+        throw new Error("Invalid URL");
+      }
+      const movie = await prisma.movie.create({
+        data: { url, authorId: user.id, slug: match.groups.slug },
+      });
+
+      // don't need to wait for this to finish
+      // TODO: add a job queue, notify client when completed
+      crawlMovieMeta(movie.id, movie.slug, prisma);
+
+      return movie;
     },
-    input: { url },
-  }) => {
-    const urlRegex = /youtube\.com\/watch\?v=(?<slug>\S+)/;
-    const match = url.match(urlRegex);
-    if (!match || !match.groups || !match.groups.slug) {
-      throw new Error("Invalid URL");
-    }
-    const movie = await prisma.movie.create({
-      data: { url, authorId: user.id, slug: match.groups.slug },
-    });
+  })
+  .mutation("vote", {
+    input: z.object({
+      movieId: z.string(),
+      type: z.enum([VoteType.UP, VoteType.DOWN]),
+    }),
+    resolve: async ({ ctx: { session, prisma }, input: { movieId, type } }) => {
+      const movie = await prisma.movie.findUnique({ where: { id: movieId } });
+      if (!movie) {
+        throw new Error("Movie not found");
+      }
 
-    // don't need to wait for this to finish
-    // TODO: add a job queue, notify client when completed
-    crawlMovieMeta(movie.id, movie.slug, prisma);
+      const existingVote = await prisma.vote.findFirst({
+        where: { movieId, authorId: session.user.id },
+      });
+      if (existingVote) {
+        throw new Error("Already voted");
+      }
 
-    return movie;
-  },
-});
+      return prisma.vote.create({
+        data: {
+          movieId,
+          authorId: session.user.id,
+          type,
+        },
+      });
+    },
+  });
 
 export const movieRouter = createRouter()
   .query("getAll", {

@@ -79,11 +79,17 @@ model Movie {
     Vote     Vote[]
 }
 
+enum VoteType {
+    UP
+    DOWN
+}
+
 model Vote {
     id       String   @id @default(cuid())
     authorId String
     movieId  String
     createAt DateTime @default(now())
+    type     VoteType
 
     author User  @relation(fields: [authorId], references: [id], onDelete: Cascade)
     movie  Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)

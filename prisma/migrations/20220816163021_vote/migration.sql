@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "VoteType" AS ENUM ('UP', 'DOWN');
+
 -- AlterTable
 ALTER TABLE "Movie" ALTER COLUMN "slug" DROP DEFAULT;
 
@@ -7,6 +10,7 @@ CREATE TABLE "Vote" (
     "authorId" TEXT NOT NULL,
     "movieId" TEXT NOT NULL,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "type" "VoteType" NOT NULL,
 
     CONSTRAINT "Vote_pkey" PRIMARY KEY ("id")
 );
