@@ -10,11 +10,24 @@ const protectedMovieRouter = createProtectedRouter().mutation("create", {
       session: { user },
     },
     input: { url },
-  }) => prisma.movie.create({ data: { url, authorId: user.id } }),
+  }) => {
+    const urlRegex = /youtube\.com\/watch\?v=(?<slug>\S+)/;
+    const match = url.match(urlRegex);
+    if (!match || !match.groups || !match.groups.slug) {
+      throw new Error("Invalid URL");
+    }
+    console.log({ slug: match.groups.slug });
+    return prisma.movie.create({
+      data: { url, authorId: user.id, slug: match.groups.slug },
+    });
+  },
 });
 
 export const movieRouter = createRouter()
   .query("getAll", {
-    resolve: async ({ ctx: { prisma } }) => prisma.movie.findMany(),
+    resolve: async ({ ctx: { prisma } }) =>
+      prisma.movie.findMany({
+        include: { author: { select: { id: true, email: true, name: true } } },
+      }),
   })
   .merge(protectedMovieRouter);

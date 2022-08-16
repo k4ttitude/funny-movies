@@ -12,7 +12,7 @@ const Header = () => {
   const { data: session } = useSession();
 
   return (
-    <header className="px-5 py-4 flex justify-between items-center h-14 bg-black text-neutral-100">
+    <header className="sticky top-0 px-5 py-4 flex justify-between items-center h-14 bg-black text-neutral-100">
       <h1 className="text-3xl font-bold">Funny Movies</h1>
       <div className="flex items-center gap-4">
         {session?.user ? (
@@ -65,7 +65,7 @@ type DialogProps = { open: boolean; onOpenChange: (open: boolean) => void };
 const ShareDialog: React.FC<DialogProps> = ({ open, onOpenChange }) => {
   const [url, setUrl] = useState("");
   const { queryClient } = trpc.useContext();
-  const { mutate: shareMovie } = trpc.useMutation("movie.create", {
+  const { mutate: shareMovie, isLoading } = trpc.useMutation("movie.create", {
     onSuccess: () => {
       queryClient.invalidateQueries(["movie.getAll"]);
       onOpenChange(false);
@@ -101,7 +101,7 @@ const ShareDialog: React.FC<DialogProps> = ({ open, onOpenChange }) => {
               onChange={(e) => setUrl(e.target.value)}
             />
             <div className="h-4" />
-            <Button>Share</Button>
+            <Button disabled={isLoading}>Share</Button>
           </form>
           <Dialog.Close asChild>
             <button className="absolute -top-3 right-2 bg-slate-700/95 flex items-center justify-center rounded h-6 w-6 text-neutral-300 hover:text-white">
