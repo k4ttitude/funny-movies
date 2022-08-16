@@ -2,6 +2,7 @@ import { createRouter } from "./context";
 import { z } from "zod";
 import { createProtectedRouter } from "./protected-router";
 import { PrismaClient } from "@prisma/client";
+import { env } from "../../env/server.mjs";
 
 type YoutubeVideosResponse = {
   items: {
@@ -19,10 +20,9 @@ const crawlMovieMeta = async (
 ) => {
   try {
     const videosResponse = await fetch(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${slug}&key=${"AIzaSyALpieq8_5xjD7wIGLtaz-mLsMLrA7q464"}`,
+      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${slug}&key=${env.YOUTUBE_API_KEY}`,
       { method: "GET", referrerPolicy: "origin" }
     ).then((res) => res.json() as Promise<YoutubeVideosResponse>);
-    console.log({ videosResponse });
     if (
       !videosResponse.items ||
       !videosResponse.items[0] ||
@@ -32,7 +32,6 @@ const crawlMovieMeta = async (
     }
 
     const { snippet } = videosResponse.items[0];
-    console.log(snippet);
     await prisma.movie.update({
       where: { id: movieId },
       data: { title: snippet?.title, description: snippet?.description },
