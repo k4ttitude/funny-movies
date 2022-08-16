@@ -13,7 +13,7 @@ export const authRouter = createRouter().mutation("login", {
   async resolve({ input: { username, password }, ctx: { prisma } }) {
     const hashedPassword = hashMd5(hashMd5(password));
     const existingUser = await prisma.user.findFirst({
-      where: { email: username },
+      where: { email: username, password: hashedPassword },
     });
 
     return existingUser;

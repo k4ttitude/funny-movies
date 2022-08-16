@@ -1,12 +1,14 @@
+import crypto from "crypto";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../server/db/client";
-import { env } from "../../../env/server.mjs";
-import { trpc } from "../../../utils/trpc";
 import { User } from "@prisma/client";
+
+const hashMd5 = (str: string) =>
+  crypto.createHash("md5").update(str).digest("hex");
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
@@ -29,12 +31,16 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         if (!credentials) throw Error("No credentials");
         const { username, password } = credentials;
-        const { mutateAsync } = trpc.useMutation(["auth.login"]);
+        const hashedPassword = hashMd5(hashMd5(password));
+        const user = await prisma.user.findFirst({
+          where: { email: username, password: hashedPassword },
+        });
+        // const { mutateAsync } = trpc.useMutation(["auth.login"]);
 
-        const user = await mutateAsync({ username, password });
+        // const user = await mutateAsync({ username, password });
         if (!user) throw Error("Invalid credentials");
 
-        return user as User;
+        return user;
       },
     }),
   ],
