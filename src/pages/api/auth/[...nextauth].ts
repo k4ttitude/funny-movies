@@ -25,15 +25,19 @@ export const authOptions: NextAuthOptions = {
       id: "credentials",
       name: "credentials",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "john.doe" },
-        password: { label: "Password", type: "password" },
+        email: { label: "Email", type: "text", placeholder: "Email" },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "Password",
+        },
       },
       async authorize(credentials) {
         if (!credentials) throw Error("No credentials");
 
-        const { username, password } = credentials;
+        const { email, password } = credentials;
         const user = await trpcClient.mutation("auth.login", {
-          username,
+          email,
           password,
         });
         if (!user) throw Error("Invalid credentials");
