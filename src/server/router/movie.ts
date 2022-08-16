@@ -1,7 +1,7 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import { createProtectedRouter } from "./protected-router";
-import { PrismaClient, Vote, VoteType } from "@prisma/client";
+import { PrismaClient, VoteType } from "@prisma/client";
 import { env } from "../../env/server.mjs";
 
 type YoutubeVideosResponse = {
@@ -99,7 +99,10 @@ export const movieRouter = createRouter()
   .query("getAll", {
     resolve: async ({ ctx: { prisma } }) =>
       prisma.movie.findMany({
-        include: { author: { select: { id: true, email: true, name: true } } },
+        include: {
+          author: { select: { id: true, email: true, name: true } },
+          votes: { select: { authorId: true, type: true } },
+        },
       }),
   })
   .merge(protectedMovieRouter);

@@ -76,7 +76,7 @@ model Movie {
 
     authorId String
     author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-    Vote     Vote[]
+    votes    Vote[]
 }
 
 enum VoteType {
