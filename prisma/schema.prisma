@@ -54,7 +54,8 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    Movie         Movie[]
+    movies        Movie[]
+    votes         Vote[]
 }
 
 model VerificationToken {
@@ -75,4 +76,15 @@ model Movie {
 
     authorId String
     author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    Vote     Vote[]
+}
+
+model Vote {
+    id       String   @id @default(cuid())
+    authorId String
+    movieId  String
+    createAt DateTime @default(now())
+
+    author User  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    movie  Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
 }
