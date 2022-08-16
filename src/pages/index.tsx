@@ -32,8 +32,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
   return (
     <section className="h-60 flex self-stretch py-4 px-5 motion-safe:hover:scale-105 overflow-hidden bg-black/50 rounded-sm">
       <iframe
-        height="200"
-        className="aspect-video"
+        className="aspect-video h-full"
         src={`https://www.youtube.com/embed/${movie.slug}`}
         title="YouTube video player"
         frameBorder="0"
