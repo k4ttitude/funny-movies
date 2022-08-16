@@ -11,7 +11,9 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 px-8 py-4 flex justify-between items-center h-14 bg-black text-neutral-100">
-      <h1 className="text-3xl font-bold">Funny Movies</h1>
+      <h1 className="sm:text-xl md:text-2xl lg:text-3xl font-bold">
+        Funny Movies
+      </h1>
       <div className="flex items-center gap-4">
         {session?.user ? (
           <>

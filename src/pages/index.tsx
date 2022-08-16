@@ -30,7 +30,7 @@ type Movie = ArrElement<inferQueryOutput<"movie.getAll">>;
 
 const MovieCard = ({ movie }: { movie: Movie }) => {
   return (
-    <section className="h-60 flex self-stretch py-4 px-5 motion-safe:hover:scale-105 overflow-hidden bg-black/50 rounded-sm">
+    <section className="min-w-[600px] h-60 cursor-pointer flex self-stretch py-4 px-5 motion-safe:hover:scale-105 overflow-hidden bg-black/50 rounded-sm">
       <iframe
         className="aspect-video h-full"
         src={`https://www.youtube.com/embed/${movie.slug}`}
