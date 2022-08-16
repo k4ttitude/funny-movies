@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Button from "../../components/button";
+import Button from "../../components/Button";
 import FormInput from "../../components/FormInput";
 import { trpc } from "../../utils/trpc";
 

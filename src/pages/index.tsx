@@ -1,14 +1,12 @@
+import { Movie } from "@prisma/client";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Header from "../components/Header";
-
-type TechnologyCardProps = {
-  name: string;
-  description: string;
-  documentation: string;
-};
+import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
+  const { data: movies, isLoading } = trpc.useQuery(["movie.getAll"]);
+
   return (
     <div className="flex flex-col min-h-screen bg-zinc-800 text-neutral-100">
       <Head>
@@ -18,29 +16,27 @@ const Home: NextPage = () => {
       </Head>
 
       <Header />
-      <main className="container flex-1 mx-auto flex flex-col items-center justify-center p-4 bg-gray-300">
-        <p></p>
+      <main className="container flex-1 mx-auto flex flex-col items-center justify-center p-4">
+        {movies?.map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
       </main>
     </div>
   );
 };
 
-const TechnologyCard = ({
-  name,
-  description,
-  documentation,
-}: TechnologyCardProps) => {
+const MovieCard = ({ movie }: { movie: Movie }) => {
   return (
-    <section className="flex flex-col justify-center p-6 duration-500 border-2 border-gray-500 rounded shadow-xl motion-safe:hover:scale-105">
-      <h2 className="text-lg text-gray-700">{name}</h2>
-      <p className="text-sm text-gray-600">{description}</p>
+    <section className="flex justify-center p-6 motion-safe:hover:scale-105">
+      <h2 className="text-lg text-gray-700">{movie.title}</h2>
+      <p className="text-sm text-gray-600">{movie.description}</p>
       <a
         className="mt-3 text-sm underline text-violet-500 decoration-dotted underline-offset-2"
-        href={documentation}
+        href={movie.url}
         target="_blank"
         rel="noreferrer"
       >
-        Documentation
+        URL
       </a>
     </section>
   );
