@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import { trpc } from "../utils/trpc";
 
@@ -11,6 +11,7 @@ type TechnologyCardProps = {
 
 const Home: NextPage = () => {
   const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
+  const { data: session } = useSession();
 
   return (
     <>
@@ -25,6 +26,7 @@ const Home: NextPage = () => {
           Create <span className="text-purple-300">T3</span> App
         </h1>
         <p>
+          {session?.user?.email}
           <button onClick={() => signIn()}>Sign In</button>
         </p>
         <p className="text-2xl text-gray-700">This stack uses:</p>
