@@ -10,7 +10,7 @@ const Button = React.forwardRef<HTMLButtonElement, HTMLButtonProps>(
     return (
       <button
         ref={ref}
-        className={`h-8 px-3 rounded border border-slate-300 bg-slate-50 text-neutral-800 hover:border-slate-500 hover:bg-slate-100 hover:text-neutral-900 ${
+        className={`h-8 px-3 rounded border border-slate-500 bg-slate-700 text-neutral-100 hover:border-slate-400 hover:bg-slate-600 hover:text-white ${
           className || ""
         }`}
         {...props}
