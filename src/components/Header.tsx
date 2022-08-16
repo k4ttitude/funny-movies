@@ -10,12 +10,6 @@ import FormInput from "./FormInput";
 const Header = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const { data: session } = useSession();
-  const { queryClient } = trpc.useContext();
-  const { mutate: shareMovie } = trpc.useMutation("movie.create", {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["movie.getAll"]);
-    },
-  });
 
   return (
     <header className="px-5 py-4 flex justify-between items-center h-14 bg-black text-neutral-100">
@@ -59,8 +53,8 @@ const Header = () => {
             </Button>
           </>
         )}
+        <ShareDialog open={isDialogOpen} onOpenChange={setDialogOpen} />
       </div>
-      <ShareDialog open={isDialogOpen} onOpenChange={setDialogOpen} />
     </header>
   );
 };
@@ -69,9 +63,18 @@ export default Header;
 
 type DialogProps = { open: boolean; onOpenChange: (open: boolean) => void };
 const ShareDialog: React.FC<DialogProps> = ({ open, onOpenChange }) => {
+  const [url, setUrl] = useState("");
+  const { queryClient } = trpc.useContext();
+  const { mutate: shareMovie } = trpc.useMutation("movie.create", {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["movie.getAll"]);
+      onOpenChange(false);
+    },
+  });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onOpenChange(false);
+    shareMovie({ url });
   };
 
   return (
@@ -79,8 +82,8 @@ const ShareDialog: React.FC<DialogProps> = ({ open, onOpenChange }) => {
       <Dialog.Trigger />
       <Dialog.Portal>
         <Dialog.Overlay />
-        <Dialog.Content className="bg-slate-700/75 rounded-lg w-96 h-fit top-1/2 left-1/2 fixed -translate-x-1/2 -translate-y-1/2">
-          <Dialog.Title className="absolute left-3 -top-3 text-neutral-100 bg-slate-700/75 rounded px-2">
+        <Dialog.Content className="bg-slate-700/95 rounded-lg w-96 h-fit top-1/2 left-1/2 fixed -translate-x-1/2 -translate-y-1/2">
+          <Dialog.Title className="absolute left-3 -top-3 text-neutral-100 bg-slate-700/95 rounded px-2">
             Share a Youtube video
           </Dialog.Title>
           <div className="h-2" />
@@ -88,12 +91,20 @@ const ShareDialog: React.FC<DialogProps> = ({ open, onOpenChange }) => {
             onSubmit={handleSubmit}
             className="px-6 py-4 flex flex-col items-center"
           >
-            <FormInput label="Youtube URL" name="url" />
+            <FormInput
+              label="Youtube URL"
+              name="url"
+              type="url"
+              pattern="\S*youtube\.com\/watch\?v=\S+"
+              required
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            />
             <div className="h-4" />
             <Button>Share</Button>
           </form>
           <Dialog.Close asChild>
-            <button className="absolute -top-3 right-2 bg-slate-700/75 flex items-center justify-center rounded h-6 w-6 text-neutral-300 hover:text-white">
+            <button className="absolute -top-3 right-2 bg-slate-700/95 flex items-center justify-center rounded h-6 w-6 text-neutral-300 hover:text-white">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"

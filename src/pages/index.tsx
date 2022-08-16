@@ -16,7 +16,7 @@ const Home: NextPage = () => {
       </Head>
 
       <Header />
-      <main className="container flex-1 mx-auto flex flex-col items-center justify-center p-4">
+      <main className="flex-1 items-center p-4 bg-red-50/25 grid grid-cols-2 auto-rows-min gap-8 overflow-hidden">
         {movies?.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
@@ -27,17 +27,25 @@ const Home: NextPage = () => {
 
 const MovieCard = ({ movie }: { movie: Movie }) => {
   return (
-    <section className="flex justify-center p-6 motion-safe:hover:scale-105">
-      <h2 className="text-lg text-gray-700">{movie.title}</h2>
-      <p className="text-sm text-gray-600">{movie.description}</p>
-      <a
-        className="mt-3 text-sm underline text-violet-500 decoration-dotted underline-offset-2"
-        href={movie.url}
-        target="_blank"
-        rel="noreferrer"
-      >
-        URL
-      </a>
+    <section className="flex self-stretch p-6 motion-safe:hover:scale-105 overflow-hidden bg-neutral-700/80 rounded-sm">
+      <iframe
+        height="200"
+        className="aspect-video"
+        src="https://www.youtube.com/embed/cC6HFd1zcbo"
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
+      <div className="p-4">
+        <h2 className="text-neutral-100 text-xl">{movie.title || "TITLE"}</h2>
+        <div className="h-1" />
+        <p className="text-sm text-neutral-400">Shared by: {movie.authorId}</p>
+        <div className="h-1" />
+        <p className="text-sm text-neutral-500">
+          {movie.description || "DESCRIPTION"}
+        </p>
+      </div>
     </section>
   );
 };
