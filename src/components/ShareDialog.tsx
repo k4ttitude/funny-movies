@@ -11,6 +11,7 @@ const ShareDialog: React.FC<DialogProps> = ({ open, onOpenChange }) => {
   const { mutate: shareMovie, isLoading } = trpc.useMutation("movie.create", {
     onSuccess: () => {
       queryClient.invalidateQueries(["movie.getAll"]);
+      setUrl("");
       onOpenChange(false);
     },
   });

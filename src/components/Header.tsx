@@ -10,11 +10,12 @@ const Header = () => {
   const { data: session } = useSession();
 
   return (
-    <header className="sticky top-0 px-5 py-4 flex justify-between items-center h-14 bg-black text-neutral-100">
+    <header className="sticky top-0 px-8 py-4 flex justify-between items-center h-14 bg-black text-neutral-100">
       <h1 className="text-3xl font-bold">Funny Movies</h1>
       <div className="flex items-center gap-4">
         {session?.user ? (
           <>
+            <ShareDialog open={isDialogOpen} onOpenChange={setDialogOpen} />
             <span>
               Welcome <b>{session.user.email}</b>
             </span>
@@ -51,7 +52,6 @@ const Header = () => {
             </Button>
           </>
         )}
-        <ShareDialog open={isDialogOpen} onOpenChange={setDialogOpen} />
       </div>
     </header>
   );

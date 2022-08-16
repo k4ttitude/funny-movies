@@ -30,7 +30,7 @@ type Movie = ArrElement<inferQueryOutput<"movie.getAll">>;
 
 const MovieCard = ({ movie }: { movie: Movie }) => {
   return (
-    <section className="flex self-stretch p-6 motion-safe:hover:scale-105 overflow-hidden bg-black/50 rounded-sm">
+    <section className="h-60 flex self-stretch py-4 px-5 motion-safe:hover:scale-105 overflow-hidden bg-black/50 rounded-sm">
       <iframe
         height="200"
         className="aspect-video"
@@ -40,7 +40,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       ></iframe>
-      <div className="p-4">
+      <div className="p-4 pt-0 flex-1 overflow-hidden text-ellipsis whitespace-normal">
         <h2 className="text-neutral-100 text-xl">{movie.title || "TITLE"}</h2>
         <div className="h-1" />
         <p className="text-sm text-neutral-400">
@@ -48,7 +48,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
         </p>
         <div className="h-1" />
         <p className="text-sm text-neutral-500">
-          {movie.description || "DESCRIPTION"}
+          {movie.description || "Description"}
         </p>
       </div>
     </section>
