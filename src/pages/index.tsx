@@ -10,7 +10,7 @@ type TechnologyCardProps = {
 
 const Home: NextPage = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-800">
+    <div className="flex flex-col min-h-screen bg-zinc-800 text-neutral-100">
       <Head>
         <title>Funny Movies</title>
         <meta name="description" content="Funny Movies" />

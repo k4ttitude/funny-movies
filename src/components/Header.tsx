@@ -1,4 +1,5 @@
 import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import Button from "./button";
 import Tooltip from "./Tooltip";
 
@@ -40,9 +41,12 @@ const Header = () => {
             </Button>
           </>
         ) : (
-          <Button onClick={() => signIn()} className="">
-            Sign In
-          </Button>
+          <>
+            <Button onClick={() => signIn()}>Sign In</Button>
+            <Button>
+              <Link href="/auth/signup">Sign Up</Link>
+            </Button>
+          </>
         )}
       </div>
     </header>
