@@ -6,7 +6,6 @@ For more information about this stack, please refer from [T3.README.md](./T3.REA
 
 - Pagination / Infinite loading for movies list
 - Jobs queue to crawl Youtube video metadata (title, description)
-- Mobile view
 
 # Lack of tests
 

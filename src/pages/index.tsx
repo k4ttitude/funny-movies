@@ -18,7 +18,7 @@ const Home: NextPage = () => {
       </Head>
 
       <Header />
-      <main className="flex-1 items-center p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-8 overflow-hidden">
+      <main className="flex-1 items-center p-4 sm:p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-4 sm:gap-8 overflow-hidden">
         {movies?.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
@@ -48,16 +48,16 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
     );
 
   return (
-    <section className="min-w-[600px] h-60 cursor-pointer flex self-stretch py-4 px-5 motion-safe:hover:scale-105 overflow-hidden bg-black/50 rounded-sm">
+    <section className="flex flex-col sm:flex-row self-stretch py-4 px-5 motion-safe:hover:scale-105 overflow-hidden bg-black/50 rounded-sm">
       <iframe
-        className="aspect-video h-full"
+        className="aspect-video h-40 sm:h-60"
         src={`https://www.youtube.com/embed/${movie.slug}`}
         title="YouTube video player"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       ></iframe>
-      <div className="p-4 pt-0 flex-1 flex flex-col gap-1 overflow-hidden text-ellipsis whitespace-normal">
+      <div className="p-0 pt-4 h-40 sm:p-4 sm:pt-0 sm:h-60 flex-1 flex flex-col gap-1 overflow-hidden text-ellipsis whitespace-normal">
         <h2 className="text-neutral-100 text-xl">{movie.title || "TITLE"}</h2>
         <p className="flex gap-2 items-center text-neutral-500">
           <span className="flex gap-1 items-start">
@@ -104,7 +104,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
         <p className="text-sm text-neutral-400">
           Shared by: {movie.author.email}
         </p>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 hidden sm:block">
           {movie.description || "Description"}
         </p>
       </div>
