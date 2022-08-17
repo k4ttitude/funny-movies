@@ -7,13 +7,23 @@ import { inferQueryOutput, trpc } from "../utils/trpc";
 import cn from "classnames";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Spin from "../components/Spin";
+import { UIEventHandler, useEffect } from "react";
 
 const Home: NextPage = () => {
-  const { data: movies, isLoading } = trpc.useQuery(["movie.getAll"]);
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    trpc.useInfiniteQuery(["movie.getInfinite", { take: 6 }], {
+      getNextPageParam: (prev) => prev.nextCursor,
+    });
   const [listRef] = useAutoAnimate<HTMLDivElement>();
+  const handleScroll: UIEventHandler<HTMLElement> = (e) => {
+    const { scrollHeight, scrollTop, clientHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop === clientHeight && hasNextPage) {
+      fetchNextPage();
+    }
+  };
 
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-800 text-neutral-100">
+    <div className="flex flex-col h-screen bg-zinc-800 text-neutral-100">
       <Head>
         <title>Funny Movies</title>
         <meta name="description" content="Funny Movies" />
@@ -23,15 +33,19 @@ const Home: NextPage = () => {
       <Header />
       <main
         ref={listRef}
-        className="flex-1 items-center p-4 sm:p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-4 sm:gap-8 overflow-hidden"
+        onScroll={handleScroll}
+        className="items-center p-4 sm:p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-4 sm:gap-8 overflow-hidden overflow-y-scroll"
       >
         {isLoading ? (
-          <Spin className="text-neutral-100" />
-        ) : movies ? (
-          movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+          <Spin className="text-neutral-100 col-span-2" />
+        ) : data?.pages ? (
+          data?.pages
+            .flatMap((page) => page.items)
+            .map((movie) => <MovieCard key={movie.id} movie={movie} />)
         ) : (
           <span className="text-sm m-auto">No movies.</span>
         )}
+        {isFetchingNextPage && <Spin className="col-span-2" />}
       </main>
     </div>
   );
@@ -39,7 +53,7 @@ const Home: NextPage = () => {
 
 type ArrElement<ArrType extends readonly unknown[]> =
   ArrType extends readonly (infer ElementType)[] ? ElementType : never;
-type Movie = ArrElement<inferQueryOutput<"movie.getAll">>;
+type Movie = ArrElement<inferQueryOutput<"movie.getInfinite">["items"]>;
 
 const MovieCard = ({ movie }: { movie: Movie }) => {
   const { data: session } = useSession();

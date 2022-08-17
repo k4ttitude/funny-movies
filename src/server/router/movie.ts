@@ -102,13 +102,30 @@ const protectedMovieRouter = createProtectedRouter()
   });
 
 export const movieRouter = createRouter()
-  .query("getAll", {
-    resolve: async ({ ctx: { prisma } }) =>
-      prisma.movie.findMany({
+  .query("getInfinite", {
+    input: z.object({
+      cursor: z.string().nullish(),
+      take: z.number().min(1).max(100).default(10),
+    }),
+    resolve: async ({ ctx: { prisma }, input }) => {
+      const { take, cursor } = input;
+      const movies = await prisma.movie.findMany({
         include: {
           author: { select: { id: true, email: true, name: true } },
           votes: { select: { authorId: true, type: true } },
         },
-      }),
+        take: (take ?? 10) + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: { id: "asc" },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (movies.length > take) {
+        const nextItem = movies.pop();
+        nextCursor = nextItem!.id;
+      }
+
+      return { items: movies, nextCursor };
+    },
   })
   .merge(protectedMovieRouter);
