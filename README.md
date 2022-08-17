@@ -2,9 +2,10 @@
 
 For more information about this stack, please refer from [T3.README.md](./T3.README.md)
 
-# Features that have not been implemented
+# Features that would be implemented with extra timeline
 
 - Pagination / Infinite loading for movies list
+- Optimistic updates (adding movie, voting)
 - Jobs queue to crawl Youtube video metadata (title, description)
 
 # Lack of tests
