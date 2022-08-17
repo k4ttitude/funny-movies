@@ -5,9 +5,11 @@ import Head from "next/head";
 import Header from "../components/Header";
 import { inferQueryOutput, trpc } from "../utils/trpc";
 import cn from "classnames";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const Home: NextPage = () => {
   const { data: movies, isLoading } = trpc.useQuery(["movie.getAll"]);
+  const [listRef] = useAutoAnimate<HTMLDivElement>();
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-800 text-neutral-100">
@@ -18,7 +20,10 @@ const Home: NextPage = () => {
       </Head>
 
       <Header />
-      <main className="flex-1 items-center p-4 sm:p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-4 sm:gap-8 overflow-hidden">
+      <main
+        ref={listRef}
+        className="flex-1 items-center p-4 sm:p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-4 sm:gap-8 overflow-hidden"
+      >
         {movies?.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}

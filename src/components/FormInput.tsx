@@ -18,9 +18,6 @@ const FormInput: React.FC<FormInputProps> = ({
   const id = useId();
   return (
     <div className="col-span-6 self-stretch">
-      <Head>
-        <title>Sign Up</title>
-      </Head>
       <label
         htmlFor={`${id}-${name}`}
         className="block text-sm font-medium text-neutral-100 cursor-pointer"

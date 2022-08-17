@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Button from "../../components/Button";
@@ -23,33 +24,38 @@ const SignUp: NextPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-800">
-      <form
-        onSubmit={handleSubmit}
-        className="sm:w-96 m-auto rounded-md flex flex-col gap-2 items-center justify-center px-6 py-4 bg-slate-700/75"
-      >
-        <FormInput
-          type="email"
-          required
-          label="Email"
-          name="email"
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <FormInput
-          type="password"
-          required
-          label="Password"
-          name="password"
-          autoComplete="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <div />
-        <Button>Sign Up</Button>
-      </form>
-    </div>
+    <>
+      <Head>
+        <title>Sign Up</title>
+      </Head>
+      <div className="flex flex-col min-h-screen bg-zinc-800">
+        <form
+          onSubmit={handleSubmit}
+          className="sm:w-96 m-auto rounded-md flex flex-col gap-2 items-center justify-center px-6 py-4 bg-slate-700/75"
+        >
+          <FormInput
+            type="email"
+            required
+            label="Email"
+            name="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <FormInput
+            type="password"
+            required
+            label="Password"
+            name="password"
+            autoComplete="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div />
+          <Button>Sign Up</Button>
+        </form>
+      </div>
+    </>
   );
 };
 
