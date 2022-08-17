@@ -25,8 +25,9 @@ const Home: NextPage = () => {
         ref={listRef}
         className="flex-1 items-center p-4 sm:p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-4 sm:gap-8 overflow-hidden"
       >
-        {isLoading && <Spin className="text-neutral-100" />}
-        {movies ? (
+        {isLoading ? (
+          <Spin className="text-neutral-100" />
+        ) : movies ? (
           movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
         ) : (
           <span className="text-sm m-auto">No movies.</span>
