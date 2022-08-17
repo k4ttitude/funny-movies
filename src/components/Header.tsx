@@ -10,7 +10,7 @@ const Header = () => {
   const { data: session } = useSession();
 
   return (
-    <header className="sticky top-0 px-4 sm:px-8 py-4 flex justify-between items-center h-14 bg-black text-neutral-100">
+    <header className="sticky z-10 top-0 px-4 sm:px-8 py-4 flex justify-between items-center h-14 bg-black text-neutral-100">
       <h1 className="sm:text-xl md:text-2xl lg:text-3xl font-bold">
         Funny Movies
       </h1>

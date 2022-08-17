@@ -6,9 +6,10 @@ import Header from "../components/Header";
 import { inferQueryOutput, trpc } from "../utils/trpc";
 import cn from "classnames";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import Spin from "../components/Spin";
 
 const Home: NextPage = () => {
-  const { data: movies } = trpc.useQuery(["movie.getAll"]);
+  const { data: movies, isLoading } = trpc.useQuery(["movie.getAll"]);
   const [listRef] = useAutoAnimate<HTMLDivElement>();
 
   return (
@@ -24,9 +25,12 @@ const Home: NextPage = () => {
         ref={listRef}
         className="flex-1 items-center p-4 sm:p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-4 sm:gap-8 overflow-hidden"
       >
-        {movies?.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+        {isLoading && <Spin className="text-neutral-100" />}
+        {movies ? (
+          movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+        ) : (
+          <span className="text-sm m-auto">No movies.</span>
+        )}
       </main>
     </div>
   );

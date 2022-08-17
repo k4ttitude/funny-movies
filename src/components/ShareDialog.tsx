@@ -3,6 +3,7 @@ import { trpc } from "../utils/trpc";
 import * as Dialog from "@radix-ui/react-dialog";
 import FormInput from "./FormInput";
 import Button from "./Button";
+import Spin from "./Spin";
 
 type DialogProps = { open: boolean; onOpenChange: (open: boolean) => void };
 const ShareDialog: React.FC<DialogProps> = ({ open, onOpenChange }) => {
@@ -45,7 +46,7 @@ const ShareDialog: React.FC<DialogProps> = ({ open, onOpenChange }) => {
               onChange={(e) => setUrl(e.target.value)}
             />
             <div className="h-4" />
-            <Button disabled={isLoading}>Share</Button>
+            <Button disabled={isLoading}>{isLoading && <Spin />}Share</Button>
           </form>
           <Dialog.Close asChild>
             <button className="absolute -top-3 right-2 bg-slate-700/95 flex items-center justify-center rounded h-6 w-6 text-neutral-300 hover:text-white">
