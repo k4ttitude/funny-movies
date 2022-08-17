@@ -82,7 +82,13 @@ const protectedMovieRouter = createProtectedRouter()
         where: { movieId, authorId: session.user.id },
       });
       if (existingVote) {
-        throw new Error("Already voted");
+        if (existingVote.type === type) {
+          throw new Error("Already voted");
+        }
+        return prisma.vote.update({
+          where: { id: existingVote.id },
+          data: { type },
+        });
       }
 
       return prisma.vote.create({
