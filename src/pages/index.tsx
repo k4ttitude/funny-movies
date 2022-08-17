@@ -34,7 +34,7 @@ const Home: NextPage = () => {
       <main
         ref={listRef}
         onScroll={handleScroll}
-        className="items-center p-4 sm:p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-4 sm:gap-8 overflow-hidden overflow-y-scroll"
+        className="items-center p-4 sm:p-8 grid sm:grid-cols-1 xl:grid-cols-2 auto-rows-min gap-4 sm:gap-8 overflow-hidden overflow-y-auto"
       >
         {isLoading ? (
           <Spin className="text-neutral-100 col-span-2" />
