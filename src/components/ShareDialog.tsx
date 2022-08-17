@@ -8,10 +8,10 @@ import Spin from "./Spin";
 type DialogProps = { open: boolean; onOpenChange: (open: boolean) => void };
 const ShareDialog: React.FC<DialogProps> = ({ open, onOpenChange }) => {
   const [url, setUrl] = useState("");
-  const { queryClient } = trpc.useContext();
+  const { invalidateQueries } = trpc.useContext();
   const { mutate: shareMovie, isLoading } = trpc.useMutation("movie.create", {
     onSuccess: () => {
-      queryClient.invalidateQueries(["movie.getInfinite"]);
+      invalidateQueries(["movie.getInfinite"]);
       setUrl("");
       onOpenChange(false);
     },
