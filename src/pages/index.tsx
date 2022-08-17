@@ -59,7 +59,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
   const { data: session } = useSession();
   const { queryClient } = trpc.useContext();
   const { mutate: vote } = trpc.useMutation("movie.vote", {
-    onSuccess: () => queryClient.invalidateQueries(["movie.getAll"]),
+    onSuccess: () => queryClient.invalidateQueries(["movie.getInfinite"]),
   });
 
   const handleUpvote = () => vote({ movieId: movie.id, type: "UP" });
