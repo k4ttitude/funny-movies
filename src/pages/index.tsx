@@ -8,7 +8,7 @@ import cn from "classnames";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const Home: NextPage = () => {
-  const { data: movies, isLoading } = trpc.useQuery(["movie.getAll"]);
+  const { data: movies } = trpc.useQuery(["movie.getAll"]);
   const [listRef] = useAutoAnimate<HTMLDivElement>();
 
   return (
@@ -70,10 +70,13 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
             <button
               onClick={handleUpvote}
               disabled={!session?.user}
-              className={cn("hover:text-white", {
-                ["text-neutral-200"]: selfVoted("UP"),
-                ["text-neutral-500"]: !selfVoted("UP"),
-              })}
+              className={cn(
+                "cursor-pointer hover:text-white disabled:!text-neutral-500",
+                {
+                  ["text-neutral-200"]: selfVoted("UP"),
+                  ["text-neutral-500"]: !selfVoted("UP"),
+                }
+              )}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
